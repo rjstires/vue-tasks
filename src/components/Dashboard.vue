@@ -17,34 +17,59 @@
 import Board from './Board'
 import R from 'ramda'
 
-let addTaskToBoardWithId = R.curry(
-  (boardID, task, boards) => R.map(
+// todo This all needs to be extracted.
+let getNextID = R.compose(
+  R.add(1),
+  R.head,
+  R.sort((a, b) => b - a),
+  R.map(R.prop('id'))
+)
+
+let findByIdThen = R.curry((fn, id, list) =>
+    R.compose(
+      fn,
+      R.find(R.propEq('id', id))
+    )(list)
+  )
+
+let nextTaskIDForBoard = R.compose(
+  getNextID,
+  R.prop('tasks')
+)
+
+let updateTasks = R.curry((fn, boardID, boards) =>
+  R.map(
     R.when(
       R.propEq('id', boardID),
-      R.evolve({tasks: R.append(task)})
+      R.evolve({tasks: fn})
     )
   )(boards)
 )
 
-let removeTaskFromBoardWithId = R.curry(
-  (boardID, taskID, boards) => R.map(
-    R.when(
-      R.propEq('id', boardID),
-      R.evolve({
-        tasks: R.filter(R.compose(R.not, R.propEq('id', taskID)))
-      })
-    )
-  )(boards)
+let addTaskToBoard = R.curry((boardID, boards, task) =>
+  updateTasks(
+    R.append(task),
+    boardID,
+    boards
+  )
+)
+
+let removeTaskFromBoard = R.curry((boardID, boards, taskID) =>
+  updateTasks(
+    R.reject(R.propEq('id', taskID)),
+    boardID,
+    boards
+  )
 )
 
 export default {
   data () {
     return {
       boards: [
-        {id: 1001, title: 'Board A', tasks: [{id: 11, title: 'Task A1'}, {id: 12, title: 'Task A2'}, {id: 13, title: 'Task A3'}]},
-        {id: 1002, title: 'Board B', tasks: [{id: 21, title: 'Task B1'}, {id: 22, title: 'Task B2'}, {id: 23, title: 'Task B3'}]},
-        {id: 1003, title: 'Board C', tasks: [{id: 31, title: 'Task C1'}, {id: 32, title: 'Task C2'}, {id: 33, title: 'Task C3'}]},
-        {id: 1004, title: 'Board D', tasks: [{id: 41, title: 'Task D1'}, {id: 42, title: 'Task D2'}, {id: 43, title: 'Task D3'}]}
+        {id: 1001, title: 'Board A', tasks: []},
+        {id: 1002, title: 'Board B', tasks: []},
+        {id: 1003, title: 'Board C', tasks: []},
+        {id: 1004, title: 'Board D', tasks: []}
       ]
     }
   },
@@ -54,13 +79,16 @@ export default {
   },
 
   methods: {
-    addTask (boardId, taskTitle) {
-      // todo Get next id
-      let task = {id: 999, title: taskTitle}
-      this.boards = addTaskToBoardWithId(boardId, task, this.boards)
+    addTask (boardID, taskTitle) {
+      let task = {
+        id: findByIdThen(nextTaskIDForBoard, boardID, this.boards),
+        title: taskTitle
+      }
+
+      this.boards = addTaskToBoard(boardID, this.boards, task)
     },
-    removeTask (taskId, boardId) {
-      this.boards = removeTaskFromBoardWithId(boardId, taskId, this.boards)
+    removeTask (taskID, boardID) {
+      this.boards = removeTaskFromBoard(boardID, this.boards, taskID)
     }
   }
 }
