@@ -1,7 +1,7 @@
 <div class="col s3">
   <div class="card board grey lighten-2" :id="htmlID">
     <div class="card-content grey-text text-darken-2">
-      <span class="card-title">{{title}}</span>
+      <span class="card-title card-title--board">{{title}}</span>
       <Task v-for="task in tasks" v-on:removeTask="removeTask" :title="task.title" :id="task.id" />
       <div class="card-action left-align">
         <input type="text" placeholder="New Task..." v-on:keyup.13="onEnter" v-model="newTaskTitle" />
