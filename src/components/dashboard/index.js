@@ -1,53 +1,10 @@
 import Vue from 'vue'
 import Board from '@/components/board'
-import R from 'ramda'
+import {
+  addTaskToBoard, removeTaskFromBoard, findByIdThen, nextTaskIDForBoard
+} from '@/services/task.service'
 
 require('./dashboard.css')
-
-// todo This all needs to be extracted.
-let getNextID = R.compose(
-  R.add(1),
-  R.head,
-  R.sort((a, b) => b - a),
-  R.map(R.prop('id'))
-)
-
-let findByIdThen = R.curry((fn, id, list) =>
-  R.compose(
-    fn,
-    R.find(R.propEq('id', id))
-  )(list)
-)
-
-let nextTaskIDForBoard = R.compose(
-  getNextID,
-  R.prop('tasks')
-)
-
-let updateTasks = R.curry((fn, boardID, boards) =>
-  R.map(
-    R.when(
-      R.propEq('id', boardID),
-      R.evolve({ tasks: fn })
-    )
-  )(boards)
-)
-
-let addTaskToBoard = R.curry((boardID, boards, task) =>
-  updateTasks(
-    R.append(task),
-    boardID,
-    boards
-  )
-)
-
-let removeTaskFromBoard = R.curry((boardID, boards, taskID) =>
-  updateTasks(
-    R.reject(R.propEq('id', taskID)),
-    boardID,
-    boards
-  )
-)
 
 export default Vue.component('dashboard', {
   template: require('./dashboard.template.html'),
