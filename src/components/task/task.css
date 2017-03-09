@@ -1,0 +1,14 @@
+.card.board .row {
+  margin-bottom: 10px;
+}
+
+.card.task {
+  cursor: pointer;
+  margin: .5rem 0 0 0;
+}
+
+.card .card-content .card-title.card-title--task {
+  font-size: 16px;
+  line-height: 20px;
+  margin-bottom: unset;
+}

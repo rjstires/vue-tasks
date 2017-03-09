@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import Task from '@/components/Task'
+import Task from '@/components/task'
 
 require('./board.css')
 
