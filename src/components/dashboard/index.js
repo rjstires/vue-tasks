@@ -1,20 +1,5 @@
-<template>
-<div class="container">
-  <div class="row">
-    <Board
-      v-for="board in boards"
-      :title="board.title"
-      :tasks="board.tasks"
-      :id="board.id"
-      :key="board.id"
-      v-on:addTask="addTask"
-      v-on:removeTask="removeTask" />
-  </div>
-</div>
-</template>
-
-<script>
-import Board from './Board'
+import Vue from 'vue'
+import Board from '@/components/Board'
 import R from 'ramda'
 
 // todo This all needs to be extracted.
@@ -26,11 +11,11 @@ let getNextID = R.compose(
 )
 
 let findByIdThen = R.curry((fn, id, list) =>
-    R.compose(
-      fn,
-      R.find(R.propEq('id', id))
-    )(list)
-  )
+  R.compose(
+    fn,
+    R.find(R.propEq('id', id))
+  )(list)
+)
 
 let nextTaskIDForBoard = R.compose(
   getNextID,
@@ -41,7 +26,7 @@ let updateTasks = R.curry((fn, boardID, boards) =>
   R.map(
     R.when(
       R.propEq('id', boardID),
-      R.evolve({tasks: fn})
+      R.evolve({ tasks: fn })
     )
   )(boards)
 )
@@ -62,14 +47,15 @@ let removeTaskFromBoard = R.curry((boardID, boards, taskID) =>
   )
 )
 
-export default {
+export default Vue.component('dashboard', {
+  template: require('./dashboard.template.html'),
   data () {
     return {
       boards: [
-        {id: 1001, title: 'Board A', tasks: []},
-        {id: 1002, title: 'Board B', tasks: []},
-        {id: 1003, title: 'Board C', tasks: []},
-        {id: 1004, title: 'Board D', tasks: []}
+        { id: 1001, title: 'Board A', tasks: [] },
+        { id: 1002, title: 'Board B', tasks: [] },
+        { id: 1003, title: 'Board C', tasks: [] },
+        { id: 1004, title: 'Board D', tasks: [] }
       ]
     }
   },
@@ -91,8 +77,4 @@ export default {
       this.boards = removeTaskFromBoard(boardID, this.boards, taskID)
     }
   }
-}
-</script>
-
-<style>
-</style>
+})
