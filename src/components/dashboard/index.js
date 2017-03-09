@@ -1,6 +1,8 @@
 import Vue from 'vue'
-import Board from '@/components/Board'
+import Board from '@/components/board'
 import R from 'ramda'
+
+require('./dashboard.css')
 
 // todo This all needs to be extracted.
 let getNextID = R.compose(
