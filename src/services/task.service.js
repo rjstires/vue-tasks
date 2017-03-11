@@ -1,10 +1,13 @@
 import R from 'ramda'
 
-// todo This all needs to be extracted.
+const returnZero = R.always(0)
+const getTasks = R.prop('tasks')
+const sortDescending = R.sort((a, b) => b - a)
+
 export const getNextID = R.compose(
   R.add(1),
   R.head,
-  R.sort((a, b) => b - a),
+  sortDescending,
   R.map(R.prop('id'))
 )
 
@@ -16,8 +19,12 @@ export const findByIdThen = R.curry((fn, id, list) =>
 )
 
 export const nextTaskIDForBoard = R.compose(
-  getNextID,
-  R.prop('tasks')
+  R.ifElse(
+    R.isEmpty,
+    returnZero,
+    getNextID
+  ),
+  getTasks
 )
 
 export const updateTasks = R.curry((fn, boardID, boards) =>
