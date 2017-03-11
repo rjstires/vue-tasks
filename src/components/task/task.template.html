@@ -1,7 +1,18 @@
 <div class="row" :id="htmlId">
   <div class="card task grey lighten-5" @click="onClick">
-    <div class="card-content">
-      <span class="card-title card-title--task">{{title}}</span>
+    <div class="card-content card-content--thin">
+      <div class="row">
+        <div class="col col--fullheight s8 m10 l11">
+          <div class="valign-wrapper">
+            {{title}}
+          </div>
+        </div>
+        <div class="col s4 m2 l1">
+          <div class="valign-wrapper">
+            <i class="material-icons card-edit-icon">delete</i>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

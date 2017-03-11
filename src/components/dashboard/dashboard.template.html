@@ -1,4 +1,4 @@
-<div class="container">
+<div>
   <div class="row">
     <Board v-for="board in boards" :title="board.title" :tasks="board.tasks" :id="board.id" :key="board.id" v-on:addTask="addTask"
       v-on:removeTask="removeTask" />

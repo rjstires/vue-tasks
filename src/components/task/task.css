@@ -6,9 +6,32 @@
   cursor: pointer;
   margin: .5rem 0 0 0;
 }
+.card.task .card-content.card-content--thin{
+  padding: 6px;
+}
 
 .card .card-content .card-title.card-title--task {
   font-size: 16px;
   line-height: 20px;
   margin-bottom: unset;
+}
+.card.task .card-content .row {
+  margin-bottom: 0;
+}
+
+
+.card.task .card-edit-icon {
+  display: none;
+}
+
+.card.task:hover .card-edit-icon{
+  display: inline-block;
+}
+
+.mywrapper {
+  min-height: 30px;
+}
+
+.card.task .card-content.card-content--thin .valign-wrapper {
+  min-height: 30px;
 }
