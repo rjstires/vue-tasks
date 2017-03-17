@@ -1,15 +1,23 @@
 import R from 'ramda'
+import { sortDescending } from './sort.service'
 
-const returnZero = R.always(0)
-const getTasks = R.prop('tasks')
-const sortDescending = R.sort((a, b) => b - a)
+export const returnZero = R.always(0)
+export const getTasks = R.prop('tasks')
 
 export const getNextID = R.compose(
   R.add(1),
   R.head,
   sortDescending,
   R.map(R.prop('id'))
-)
+)// ([{id: Number}])
+
+export const getNextIdOrZero = R.compose(
+  R.ifElse(
+    R.isEmpty,
+    returnZero,
+    getNextID
+  ),
+) // ([{id: Number}])
 
 export const findByIdThen = R.curry((fn, id, list) =>
   R.compose(
@@ -19,11 +27,7 @@ export const findByIdThen = R.curry((fn, id, list) =>
 )
 
 export const nextTaskIDForBoard = R.compose(
-  R.ifElse(
-    R.isEmpty,
-    returnZero,
-    getNextID
-  ),
+  getNextIdOrZero,
   getTasks
 )
 
@@ -51,3 +55,28 @@ export const removeTaskFromBoard = R.curry((boardID, boards, taskID) =>
     boards
   )
 )
+
+export const addBoardToBoards = R.curry((boards, board) => {
+  return R.compose(
+    R.append(board)
+  )(boards)
+})
+
+export const composeNewBoard = (currentBoards) => {
+  return {
+    id: getNextIdOrZero(currentBoards),
+    title: '',
+    tasks: []
+  }
+}
+
+export const composeNewTask = (tasks) => {
+  return {
+    id: getNextIdOrZero(tasks),
+    title: ''
+  }
+}
+
+export const getBoards = () => {
+  return []
+}
