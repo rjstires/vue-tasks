@@ -1,11 +1,8 @@
 <div>
   <div class="row">
-    <div class="col l12">
-      <button @click="createBoard">Add Board</button>
-    </div>
   </div>
   <div class="row">
-    <Board v-for="board in boards" :title="board.title" :tasks="board.tasks" :id="board.id" :key="board.id" v-on:addTask="addTask"
-      v-on:removeTask="removeTask" />
+    <Board v-for="board in boards" :board="board" />
+    <NewBoard />
   </div>
 </div>

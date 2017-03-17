@@ -1,40 +1,33 @@
 import Vue from 'vue'
 import Board from '@/components/board'
-import {
-  addTaskToBoard, removeTaskFromBoard, findByIdThen, nextTaskIDForBoard, getBoards, addBoardToBoards, composeNewBoard
-} from '@/services/task.service'
+import NewBoard from '@/components/newBoard'
 
 require('./dashboard.css')
 
 export default Vue.component('dashboard', {
   template: require('./dashboard.template.html'),
-  data () {
-    return {
-      boards: getBoards()
+  computed: {
+    boards () {
+      return this.$store.state.boards
     }
   },
 
   components: {
-    Board
+    Board,
+    NewBoard
   },
 
   methods: {
-    createBoard () {
-      this.boards = addBoardToBoards(this.boards, composeNewBoard(this.boards))
+    addBoard (board) {
+      this.$store.commit('addBoard', board)
     },
 
-    removeBoard () {},
-
-    addTask (boardID, taskTitle) {
-      let task = {
-        id: findByIdThen(nextTaskIDForBoard, boardID, this.boards),
-        title: taskTitle
-      }
-
-      this.boards = addTaskToBoard(boardID, this.boards, task)
+    removeBoard (boardId) {
+      this.$store.commit('removeBoard', {boardId})
     },
-    removeTask (taskID, boardID) {
-      this.boards = removeTaskFromBoard(boardID, this.boards, taskID)
+
+    updateBoard (board) {
+      this.$store.commit('updateBoard', board)
     }
   }
 })

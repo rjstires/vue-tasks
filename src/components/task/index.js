@@ -5,17 +5,12 @@ require('./task.css')
 export default Vue.component('Task', {
   template: require('./task.template.html'),
   props: {
-    title: String,
-    id: Number
+    task: Object
   },
-  computed: {
-    htmlId () {
-      return `task-${this.id}`
-    }
-  },
+  computed: {},
   methods: {
-    onClick () {
-      this.$emit('removeTask', this.id)
+    deleteTask () {
+      this.$store.commit('removeTask', this.task)
     }
   }
 })

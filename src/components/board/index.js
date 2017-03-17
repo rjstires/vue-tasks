@@ -1,14 +1,13 @@
 import Vue from 'vue'
 import Task from '@/components/task'
+import uuid from 'uuid/v4'
 
 require('./board.css')
 
 export default Vue.component('Board', {
   template: require('./board.template.html'),
   props: {
-    title: String,
-    id: Number,
-    tasks: Array
+    board: Object
   },
 
   data () {
@@ -17,24 +16,29 @@ export default Vue.component('Board', {
     }
   },
 
-  computed: {
-    htmlID () {
-      return `board-${this.id}`
-    }
-  },
+  computed: {},
 
   components: {
     Task
   },
 
   methods: {
-    onEnter () {
-      this.$emit('addTask', this.id, this.newTaskTitle)
+    addTask () {
+      const boardId = this.board.id
+      const task = { id: uuid(), title: this.newTaskTitle, boardId }
+      this.$store.commit('addTask', {
+        boardId,
+        task
+      })
       this.newTaskTitle = ''
     },
 
-    removeTask (taskId) {
-      this.$emit('removeTask', taskId, this.id)
+    removeTask (boardId, taskId) {
+      this.$store.commit('removeTask', { boardId, taskId })
+    },
+
+    updateTask (boardId, task) {
+      this.$store.commit('updateTask', { boardId, task })
     }
   }
 })
