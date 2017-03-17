@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Board from '@/components/board'
 import {
-  addTaskToBoard, removeTaskFromBoard, findByIdThen, nextTaskIDForBoard
+  addTaskToBoard, removeTaskFromBoard, findByIdThen, nextTaskIDForBoard, getBoards, addBoardToBoards, composeNewBoard
 } from '@/services/task.service'
 
 require('./dashboard.css')
@@ -10,12 +10,7 @@ export default Vue.component('dashboard', {
   template: require('./dashboard.template.html'),
   data () {
     return {
-      boards: [
-        { id: 1001, title: 'Board A', tasks: [] },
-        { id: 1002, title: 'Board B', tasks: [] },
-        { id: 1003, title: 'Board C', tasks: [] },
-        { id: 1004, title: 'Board D', tasks: [] }
-      ]
+      boards: getBoards()
     }
   },
 
@@ -24,6 +19,12 @@ export default Vue.component('dashboard', {
   },
 
   methods: {
+    createBoard () {
+      this.boards = addBoardToBoards(this.boards, composeNewBoard(this.boards))
+    },
+
+    removeBoard () {},
+
     addTask (boardID, taskTitle) {
       let task = {
         id: findByIdThen(nextTaskIDForBoard, boardID, this.boards),
